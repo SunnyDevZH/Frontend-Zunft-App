@@ -11,18 +11,13 @@ const SHIELD = 'M160 78 L232 98 V168 C232 210 160 258 160 258 C160 258 88 210 88
 function ShieldArt({
   clipId,
   fillShield = false,
-  cover = false,
 }: {
   clipId: string
   fillShield?: boolean
-  cover?: boolean
 }) {
-  const useNewArms = fillShield || cover
-  const frame = cover
-    ? { x: 88, y: 78, width: 144, height: 180, ratio: 'xMidYMid slice', stroke: 5 }
-    : fillShield
-      ? { x: 92, y: 90, width: 136, height: 146, ratio: 'xMidYMid meet', stroke: 2 }
-      : { x: 106, y: 102, width: 108, height: 120, ratio: 'xMidYMid meet', stroke: 5 }
+  const frame = fillShield
+    ? { x: 92, y: 90, width: 136, height: 146, stroke: 2 }
+    : { x: 106, y: 102, width: 108, height: 120, stroke: 5 }
 
   return (
     <g>
@@ -31,13 +26,13 @@ function ShieldArt({
       </clipPath>
       <path d={SHIELD} fill="#0266BC" />
       <image
-        href={useNewArms ? '/wappen.jpg?v=4' : '/wappen.png?v=10'}
+        href={fillShield ? '/wappen.jpg?v=5' : '/wappen.png?v=10'}
         x={frame.x}
         y={frame.y}
         width={frame.width}
         height={frame.height}
         clipPath={`url(#${clipId})`}
-        preserveAspectRatio={frame.ratio}
+        preserveAspectRatio="xMidYMid meet"
       />
       <path d={SHIELD} fill="none" stroke="#e4c98a" strokeWidth={frame.stroke} strokeLinejoin="round" />
     </g>
@@ -50,9 +45,29 @@ export function CoatOfArms({ className, seal = false, filled = false }: CoatOfAr
   const ringId = `ring-${uid}`
 
   if (!seal) {
+    if (filled) {
+      return (
+        <svg
+          className={className}
+          viewBox="0 0 953 1024"
+          overflow="visible"
+          role="img"
+          aria-label="Wappen der Zunft zu den Drei Königen"
+        >
+          <image href="/wappen.jpg?v=5" width="953" height="1024" preserveAspectRatio="xMidYMid meet" />
+        </svg>
+      )
+    }
+
     return (
-      <svg className={className} viewBox="80 70 160 196" role="img" aria-label="Wappen der Zunft zu den Drei Königen">
-        <ShieldArt clipId={clipId} cover={filled} />
+      <svg
+        className={className}
+        viewBox="80 70 160 196"
+        overflow="visible"
+        role="img"
+        aria-label="Wappen der Zunft zu den Drei Königen"
+      >
+        <ShieldArt clipId={clipId} />
       </svg>
     )
   }
